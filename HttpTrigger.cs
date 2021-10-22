@@ -21,9 +21,14 @@ namespace Digitransit.Function
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
             ILogger log, ClaimsPrincipal principal)
         {
-            var roles = principal.Claims.Where(e => e.Type == "roles").Select(e => e.Value);
             log.LogInformation("C# HTTP trigger function processed a request.");
-            log.LogInformation(roles);
+            if (null != principal)  
+                {  
+                foreach (Claim claim in principal.Claims)  
+                {  
+                    log.LogInformation("CLAIM TYPE: " + claim.Type + "; CLAIM VALUE: " + claim.Value + "</br>");  
+                }  
+            }
 
             var id = "integration";
             var key = Environment.GetEnvironmentVariable("KEY");
