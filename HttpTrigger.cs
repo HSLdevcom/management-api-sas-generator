@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Globalization;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
