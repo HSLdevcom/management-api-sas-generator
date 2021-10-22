@@ -14,20 +14,21 @@ using Newtonsoft.Json;
 
 namespace Digitransit.Function
 {
-    public static class HttpTrigger
+    public static class APIMSASGeneratorAPI
     {
-        [FunctionName("HttpTrigger")]
+        [FunctionName("APIMSASGeneratorAPI")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
             ILogger log, ClaimsPrincipal principal)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
             bool isAuthorized = false;
+            var rolePermission = Environment.GetEnvironmentVariable("ROLE_PERMISSION");
             if (null != principal)  
                 {  
                 foreach (Claim claim in principal.Claims)  
                 {
-                    if (claim.Type.ToString().Equals("roles") && claim.Value.ToString().Equals("Task.Read")) {
+                    if (claim.Type.ToString().Equals("roles") && claim.Value.ToString().Equals(rolePermission)) {
                         isAuthorized = true;
                     }
                 }  
