@@ -22,12 +22,22 @@ namespace Digitransit.Function
             ILogger log, ClaimsPrincipal principal)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
+            bool isAuthorized = false;
             if (null != principal)  
                 {  
                 foreach (Claim claim in principal.Claims)  
-                {  
-                    log.LogInformation("CLAIM TYPE: " + claim.Type + "; CLAIM VALUE: " + claim.Value + "</br>");  
+                {
+                    if (claim.Type.ToString().Equals("roles") && claim.Value.ToString().Equals("Task.Read")) {
+                        isAuthorized = true;
+                    }
                 }  
+            }
+
+            if (!isAuthorized) {
+                log.LogInformation("Unauthorized user");
+                var result = new ObjectResult("User lacks role permission");
+                result.StatusCode = StatusCodes.Status401Unauthorized;
+                return result;
             }
 
             var id = "integration";
