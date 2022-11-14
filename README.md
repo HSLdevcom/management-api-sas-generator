@@ -24,4 +24,9 @@ The client app should be created from the app registration section of the Azure 
 The application that calls this API needs to configure the application to fetch a token from the AD endpoint. To fetch the token, one can use Microsoft authentication library. [Here are some instructions for it](https://docs.microsoft.com/en-us/azure/active-directory/develop/scenario-daemon-app-configuration?tabs=dotnet). For it to work, we need to create a secret for the client. It can be created from the `Certificates & secrets` tab in the Azure portal. We need both the secret's value and the secret id. Additionally, we need to fetch the Application (client) ID from the client registration's overview, and tenant ID and application ID URI from the service registration's overview page. Note, the secret has an expiration date so new secret needs to be created once in a while.
 
 ## Delegation key
-This function needs either the primary or the secondary key from the API management's Management API tab in Azure portal. It should be added to the function app's configuration as an application setting. The name should be KEY. 
+This function needs either the primary or the secondary key from the API management's Management API tab in Azure portal. It should be added to the function app's configuration as an application setting. The name should be KEY.
+
+## Upgrading function
+In addition to update the code and settings in this repository, it might be necessary to also upgrade the dotnet version of the function app in Azure. It can be done with the following script:
+
+`az functionapp config set --net-framework-version v6.0 -n <function app name> -g <rg>`
