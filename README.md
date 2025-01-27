@@ -29,4 +29,4 @@ This function needs either the primary or the secondary key from the API managem
 ## Upgrading function
 In addition to update the code and settings in this repository, it might be necessary to also upgrade the dotnet version of the function app in Azure. It can be done with the following script:
 
-`az functionapp config set --net-framework-version v6.0 -n <function app name> -g <rg>`
+`az functionapp config set --net-framework-version v8.0 -n <function app name> -g <rg>`

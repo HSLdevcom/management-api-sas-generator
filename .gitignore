@@ -4,11 +4,15 @@
 # Azure Functions localsettings file
 local.settings.json
 
+# Azurite files
+__azurite*
+__blobstorage*
+
 # User-specific files
 *.suo
 *.user
 *.userosscache
-*.sln.docstates
+*.sln
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

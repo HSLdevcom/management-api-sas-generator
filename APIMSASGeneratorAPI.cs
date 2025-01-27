@@ -1,29 +1,31 @@
-using System;
-using System.IO;
 using System.Text;
 using System.Globalization;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace Digitransit.Function
 {
-    public static class APIMSASGeneratorAPI
+    public class APIMSASGeneratorAPI
     {
-        [FunctionName("APIMSASGeneratorAPI")]
-        public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
-            ILogger log, ClaimsPrincipal principal)
+
+        private readonly ILogger<APIMSASGeneratorAPI> _logger;
+
+        public APIMSASGeneratorAPI(ILogger<APIMSASGeneratorAPI> logger) {
+            _logger = logger;
+        }
+
+        [Function("APIMSASGeneratorAPI")]
+        public IActionResult Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            _logger.LogInformation("C# HTTP trigger function processed a request.");
             bool isAuthorized = false;
             var rolePermission = Environment.GetEnvironmentVariable("ROLE_PERMISSION");
+            var principal = ClaimsPrincipalParser.Parse(req);
             if (null != principal)  
                 {  
                 foreach (Claim claim in principal.Claims)  
@@ -35,7 +37,7 @@ namespace Digitransit.Function
             }
 
             if (!isAuthorized) {
-                log.LogInformation("Unauthorized user");
+                _logger.LogInformation("Unauthorized user");
                 var result = new ObjectResult("User lacks role permission");
                 result.StatusCode = StatusCodes.Status401Unauthorized;
                 return result;
